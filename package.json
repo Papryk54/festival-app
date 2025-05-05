@@ -1,0 +1,17 @@
+{
+	"name": "modul23b",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "git@github.com:Papryk54/rest-api-in-practice.git",
+	"author": "Patryk Olszewski <patrykolszewski420@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"start": "nodemon server.js"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"path-to-regexp": "^8.2.0",
+		"uuid": "^11.1.0"
+	}
+}
