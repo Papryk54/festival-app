@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Progress, Alert } from "reactstrap";
+import io from "socket.io-client";
 import {
 	getSeats,
 	loadSeatsRequest,
@@ -12,16 +13,15 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 	const dispatch = useDispatch();
 	const seats = useSelector(getSeats);
 	const requests = useSelector(getRequests);
-	const intervalTimeInMinutes = 2 * 60000;
+	const takenCount = seats.filter((seat) => seat.day === chosenDay).length;
 
 	useEffect(() => {
 		dispatch(loadSeatsRequest());
+		const socket = io("ws://localhost:8000", { transports: ["websocket"] });
 
-		const interval = setInterval(() => {
+		socket.on("seatsUpdated", (seats) => {
 			dispatch(loadSeatsRequest());
-		}, intervalTimeInMinutes);
-
-		return () => clearInterval(interval);
+		});
 	}, [dispatch]);
 
 	const isTaken = (seatId) => {
@@ -29,19 +29,19 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 	};
 
 	const prepareSeat = (seatId) => {
-		if (seatId === chosenSeat)
+		if (seatId === chosenSeat) {
 			return (
 				<Button key={seatId} className="seats__seat" color="primary">
 					{seatId}
 				</Button>
 			);
-		else if (isTaken(seatId))
+		} else if (isTaken(seatId)) {
 			return (
 				<Button key={seatId} className="seats__seat" disabled color="secondary">
 					{seatId}
 				</Button>
 			);
-		else
+		} else
 			return (
 				<Button
 					key={seatId}
@@ -65,6 +65,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 				<small id="pickHelpTwo" className="form-text text-muted ms-2">
 					<Button outline color="primary" /> – it's empty
 				</small>
+				<p>Free seats: {takenCount}/50</p>
 			</div>
 			{requests["LOAD_SEATS"] && requests["LOAD_SEATS"].success && (
 				<div className="seats">

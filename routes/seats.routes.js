@@ -32,6 +32,7 @@ router.route("/seats").post((req, res) => {
 	if (day && seat && client && email) {
 		const newSeat = { id: uuidv4(), day, seat, client, email };
 		db.seats.push(newSeat);
+		req.io.emit("seatsUpdated", db.seats);
 		res.status(201).json({ message: "OK" });
 	} else {
 		res.status(400).json({ message: "Missing seat data" });
