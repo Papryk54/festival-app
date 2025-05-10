@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const socket = require("socket.io");
@@ -7,6 +8,7 @@ const PORT = 8000;
 const server = app.listen(process.env.PORT || 8000, () => {
 	console.log("Server is running...");
 });
+
 const io = socket(server);
 
 app.use((req, res, next) => {
@@ -16,6 +18,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+mongoose.connect("mongodb://localhost:27017/NewWaveDB");
 
 const testimonialsRoutes = require("./routes/testimonials.routes");
 const concertsRoutes = require("./routes/concerts.routes");
