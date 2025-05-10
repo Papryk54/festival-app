@@ -19,7 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-mongoose.connect("mongodb://localhost:27017/NewWaveDB");
+// mongoose.connect("mongodb://localhost:27017/NewWaveDB");
+
+mongoose.connect(
+	"mongodb+srv://patrykolszewski420:0O7b9VwjEGDACvSl@cluster0.mfvhhmd.mongodb.net/NewWaveDB?retryWrites=true&w=majority&appName=Cluster0"
+);
 
 const testimonialsRoutes = require("./routes/testimonials.routes");
 const concertsRoutes = require("./routes/concerts.routes");
